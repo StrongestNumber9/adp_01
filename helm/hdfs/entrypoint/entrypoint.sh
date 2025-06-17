@@ -1,8 +1,4 @@
 #!/bin/bash
-{{- if .Values.development.tools.hdfs.enabled }}
-dnf install -y {{.Values.development.tools.hdfs.items}}
-{{ end }}
-
 # Common scripts
 bash /scripts/patch_resolv.sh;
 bash /scripts/patch_hosts.sh;

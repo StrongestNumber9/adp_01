@@ -1,8 +1,4 @@
 #!/bin/bash
-{{- if .Values.development.tools.teragrep.enabled }}
-dnf install -y {{.Values.development.tools.teragrep.items}}
-{{ end }}
-
 # Common scripts
 bash /scripts/patch_resolv.sh;
 bash /scripts/patch_hosts.sh;

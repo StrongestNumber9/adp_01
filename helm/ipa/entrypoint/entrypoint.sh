@@ -1,8 +1,4 @@
 #!/bin/bash
-{{- if .Values.development.tools.ipa.enabled }}
-dnf install -y {{.Values.development.tools.ipa.items}}
-{{ end }}
-
 bash /scripts/patch_hosts.sh;
 
 echo "Bootstrapping server";

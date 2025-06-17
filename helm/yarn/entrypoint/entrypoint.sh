@@ -1,8 +1,4 @@
 #!/bin/bash
-{{- if .Values.development.tools.yarn.enabled }}
-dnf install -y {{.Values.development.tools.yarn.items}}
-{{ end }}
-
 # Common scripts
 bash /scripts/patch_resolv.sh;
 bash /scripts/patch_hosts.sh;

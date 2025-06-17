@@ -130,23 +130,3 @@ archive:
     # Well known example key and secret: https://docs.aws.amazon.com/STS/latest/APIReference/API_GetAccessKeyInfo.html
     accesskey: AKIAIOSFODNN7EXAMPLE
     secret: wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
-
-# Development related extras
-development:
-  # Install certain tools automatically on startup
-  tools:
-    ipa:
-      enabled: false
-      items: "jq emacs-nox"
-    teragrep:
-      enabled: false
-      items: "jq emacs-nox"
-    yarn:
-      enabled: false
-      items: "jq emacs-nox"
-    hdfs:
-      enabled: false
-      items: "jq emacs-nox"
-    archive:
-      enabled: false
-      items: "emacs-nox"
