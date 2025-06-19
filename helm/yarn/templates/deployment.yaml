@@ -28,6 +28,25 @@ spec:
             name: yarn-entrypoint
       hostname: yarn-{{.}}
       subdomain: tg
+      initContainers:
+        - name: yarn-{{.}}-init
+          image: {{$.Values.image.path}}:{{$.Values.image.version}}
+          volumeMounts:
+            - mountPath: /config/hdp-03
+              name: shareable-hdp-03-configmap
+            - mountPath: /config/spk-02
+              name: shareable-spk-02-configmap
+            - mountPath: /entrypoint.sh
+              name: yarn-entrypoint
+              subPath: entrypoint-init.sh
+          tty: true
+          env:
+          - name: IPA_DOMAIN
+            value: {{$.Values.ipa.domain}}
+          - name: IPA_PASSWORD
+            value: {{$.Values.ipa.password}}
+          securityContext:
+            privileged: {{$.Values.security.privileged}}
       containers:
         - name: yarn-{{.}}
           image: {{$.Values.image.path}}:{{$.Values.image.version}}
@@ -39,6 +58,9 @@ spec:
             - mountPath: /entrypoint.sh
               name: yarn-entrypoint
               subPath: entrypoint.sh
+            - mountPath: /entrypoint-common.sh
+              name: yarn-entrypoint
+              subPath: entrypoint-common.sh
           tty: true
           resources:
             requests:
@@ -56,16 +78,24 @@ spec:
               - "/usr/bin/bash"
               - "-c"
               - "systemctl status nodemanager"
+            initialDelaySeconds: 10
             timeoutSeconds: 10
             periodSeconds: 10
             successThreshold: 1
-            failureThreshold: 60
+            failureThreshold: 1
+          livenessProbe:
+            exec:
+              command:
+              - "/usr/bin/bash"
+              - "-c"
+              - "systemctl status nodemanager"
+            initialDelaySeconds: 10
+            timeoutSeconds: 10
+            periodSeconds: 10
+            successThreshold: 1
+            failureThreshold: 1
           securityContext:
             privileged: {{$.Values.security.privileged}}
-          lifecycle:
-            preStop:
-              exec:
-                command: [ "/usr/bin/bash", "/scripts/shutdown.sh" ]
 {{- end}}
 
 ---
@@ -97,6 +127,25 @@ spec:
             name: yarn-entrypoint
       hostname: yarn-controlnode01
       subdomain: tg
+      initContainers:
+        - name: yarn-controlnode01-init
+          image: {{.Values.image.path}}:{{.Values.image.version}}
+          volumeMounts:
+            - mountPath: /config/hdp-03
+              name: shareable-hdp-03-configmap
+            - mountPath: /config/spk-02
+              name: shareable-spk-02-configmap
+            - mountPath: /entrypoint.sh
+              name: yarn-entrypoint
+              subPath: entrypoint-init.sh
+          tty: true
+          env:
+          - name: IPA_DOMAIN
+            value: {{.Values.ipa.domain}}
+          - name: IPA_PASSWORD
+            value: {{.Values.ipa.password}}
+          securityContext:
+            privileged: {{.Values.security.privileged}}
       containers:
         - name: yarn-controlnode01
           image: {{.Values.image.path}}:{{.Values.image.version}}
@@ -108,6 +157,9 @@ spec:
             - mountPath: /entrypoint.sh
               name: yarn-entrypoint
               subPath: entrypoint.sh
+            - mountPath: /entrypoint-common.sh
+              name: yarn-entrypoint
+              subPath: entrypoint-common.sh
           tty: true
           resources:
             requests:
@@ -125,13 +177,21 @@ spec:
               - "/usr/bin/bash"
               - "-c"
               - "systemctl status jobhistoryserver && systemctl status resourcemanager"
+            initialDelaySeconds: 60
             timeoutSeconds: 10
             periodSeconds: 10
             successThreshold: 1
-            failureThreshold: 60
+            failureThreshold: 1
+          livenessProbe:
+            exec:
+              command:
+              - "/usr/bin/bash"
+              - "-c"
+              - "systemctl status jobhistoryserver && systemctl status resourcemanager"
+            initialDelaySeconds: 60
+            timeoutSeconds: 10
+            periodSeconds: 10
+            successThreshold: 1
+            failureThreshold: 1
           securityContext:
             privileged: {{.Values.security.privileged}}
-          lifecycle:
-            preStop:
-              exec:
-                command: [ "/usr/bin/bash", "/scripts/shutdown.sh" ]

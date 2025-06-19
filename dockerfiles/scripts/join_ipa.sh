@@ -13,3 +13,6 @@ IP_LAST="$(sed "s,.*\.\([0-9]\+\)$,\1,g" <<< $IP)";
 kinit admin <<< "${IPA_PASSWORD}";
 ipa dnsrecord-add "${IP_REV}.in-addr.arpa." "${IP_LAST}" --ptr-rec "$(hostname -f).";
 kdestroy -A;
+
+echo "Creating /data/ipa-client.tar";
+tar -cf /data/ipa-client.tar /etc/krb5.conf /etc/krb5.keytab /var/lib/ipa/ /var/lib/ipa-client/ /etc/krb5.conf.d/ /etc/ipa/;

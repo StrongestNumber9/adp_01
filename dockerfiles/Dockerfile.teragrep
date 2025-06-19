@@ -10,7 +10,7 @@ RUN echo "* * * * * srv-zpln bash -c 'KRB5CCNAME=\"/tmp/krb5cc_\${UID}\" kinit -
 COPY entrypoint.service /etc/systemd/system/entrypoint.service
 RUN systemctl enable entrypoint.service
 EXPOSE 8080
-COPY scripts/patch_resolv.sh scripts/patch_hosts.sh scripts/join_ipa.sh scripts/shutdown.sh scripts/copy_config.sh /scripts/
 RUN echo "srv-zpln ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+COPY scripts/patch_resolv.sh scripts/patch_hosts.sh scripts/join_ipa.sh scripts/shutdown.sh scripts/copy_config.sh scripts/restore_ipa.sh /scripts/
 ENTRYPOINT ["/usr/sbin/init"]
 CMD ["--show-status=false"]

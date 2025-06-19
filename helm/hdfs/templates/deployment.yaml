@@ -23,17 +23,43 @@ spec:
         - name: hdfs-entrypoint
           configMap:
             name: hdfs-entrypoint
+        - name: hdfs-data-{{.}}
+          emptyDir:
       hostname: hdfs-{{.}}
       subdomain: tg
-      containers:
-        - name: yar
+      initContainers:
+        - name: hdfs-{{.}}-init
           image: {{$.Values.image.path}}:{{$.Values.image.version}}
           volumeMounts:
+            - mountPath: /data
+              name: hdfs-data-{{.}}
             - mountPath: /config/hdp-03
               name: shareable-hdp-03-configmap
             - mountPath: /entrypoint.sh
               name: hdfs-entrypoint
-              subPath: entrypoint.sh
+              subPath: entrypoint-init.sh
+          tty: true
+          env:
+          - name: IPA_DOMAIN
+            value: {{$.Values.ipa.domain}}
+          - name: IPA_PASSWORD
+            value: {{$.Values.ipa.password}}
+          securityContext:
+            privileged: {{$.Values.security.privileged}}
+      containers:
+        - name: hdfs-{{.}}
+          image: {{$.Values.image.path}}:{{$.Values.image.version}}
+          volumeMounts:
+            - mountPath: /data
+              name: hdfs-data-{{.}}
+            - mountPath: /config/hdp-03
+              name: shareable-hdp-03-configmap
+            - mountPath: /entrypoint.sh
+              name: hdfs-entrypoint
+              subPath: entrypoint-datanode.sh
+            - mountPath: /entrypoint-common.sh
+              name: hdfs-entrypoint
+              subPath: entrypoint-common.sh
           tty: true
           resources:
             requests:
@@ -51,16 +77,24 @@ spec:
               - "/usr/bin/bash"
               - "-c"
               - "systemctl status datanode"
+            initialDelaySeconds: 10
+            timeoutSeconds: 10
+            periodSeconds: 10
+            successThreshold: 1
+            failureThreshold: 60
+          livenessProbe:
+            exec:
+              command:
+              - "/usr/bin/bash"
+              - "-c"
+              - "systemctl status datanode"
+            initialDelaySeconds: 10
             timeoutSeconds: 10
             periodSeconds: 10
             successThreshold: 1
             failureThreshold: 60
           securityContext:
             privileged: {{$.Values.security.privileged}}
-          lifecycle:
-            preStop:
-              exec:
-                command: [ "/usr/bin/bash", "/scripts/shutdown.sh" ]
 {{- end}}
 
 ---
@@ -81,6 +115,8 @@ spec:
         app: hdfs-namenode01
     spec:
       volumes:
+        - name: hdfs-data-namenode01
+          emptyDir:
         - name: shareable-hdp-03-configmap
           configMap:
             name: shareable-hdp-03-configmap
@@ -92,17 +128,46 @@ spec:
             name: hdfs-entrypoint
       hostname: hdfs-namenode01
       subdomain: tg
-      containers:
-        - name: yar
+      initContainers:
+        - name: hdfs-namenode01-init
           image: {{.Values.image.path}}:{{.Values.image.version}}
           volumeMounts:
+            - mountPath: /data
+              name: hdfs-data-namenode01
             - mountPath: /config/hdp-04
               name: hdfs-hdp-04-configmap
             - mountPath: /config/hdp-03
               name: shareable-hdp-03-configmap
             - mountPath: /entrypoint.sh
               name: hdfs-entrypoint
-              subPath: entrypoint.sh
+              subPath: entrypoint-init.sh
+            - mountPath: /entrypoint-common.sh
+              name: hdfs-entrypoint
+              subPath: entrypoint-common.sh
+          tty: true
+          env:
+          - name: IPA_DOMAIN
+            value: {{.Values.ipa.domain}}
+          - name: IPA_PASSWORD
+            value: {{.Values.ipa.password}}
+          securityContext:
+            privileged: {{.Values.security.privileged}}
+      containers:
+        - name: hdfs-namenode01
+          image: {{.Values.image.path}}:{{.Values.image.version}}
+          volumeMounts:
+            - mountPath: /data
+              name: hdfs-data-namenode01
+            - mountPath: /config/hdp-04
+              name: hdfs-hdp-04-configmap
+            - mountPath: /config/hdp-03
+              name: shareable-hdp-03-configmap
+            - mountPath: /entrypoint.sh
+              name: hdfs-entrypoint
+              subPath: entrypoint-namenode.sh
+            - mountPath: /entrypoint-common.sh
+              name: hdfs-entrypoint
+              subPath: entrypoint-common.sh
           tty: true
           resources:
             requests:
@@ -120,13 +185,21 @@ spec:
               - "/usr/bin/bash"
               - "-c"
               - "[ -f /namenode.ready ] && systemctl status namenode"
+            initialDelaySeconds: 10
+            timeoutSeconds: 10
+            periodSeconds: 10
+            successThreshold: 1
+            failureThreshold: 60
+          livenessProbe:
+            exec:
+              command:
+              - "/usr/bin/bash"
+              - "-c"
+              - "[ -f /namenode.ready ] && systemctl status namenode"
+            initialDelaySeconds: 10
             timeoutSeconds: 10
             periodSeconds: 10
             successThreshold: 1
             failureThreshold: 60
           securityContext:
             privileged: {{.Values.security.privileged}}
-          lifecycle:
-            preStop:
-              exec:
-                command: [ "/usr/bin/bash", "/scripts/shutdown.sh" ]
