@@ -45,7 +45,10 @@ spec:
             name: ipa-configmap
           - mountPath: /entrypoint.sh
             name: ipa-entrypoint
-            subPath: entrypoint.sh
+            subPath: entrypoint-init.sh
+          - mountPath: /entrypoint-common.sh
+            name: ipa-entrypoint
+            subPath: entrypoint-common.sh
           securityContext:
             privileged: {{.Values.security.privileged}}
       containers:
@@ -89,13 +92,16 @@ spec:
           - mountPath: /entrypoint.sh
             name: ipa-entrypoint
             subPath: entrypoint.sh
+          - mountPath: /entrypoint-common.sh
+            name: ipa-entrypoint
+            subPath: entrypoint-common.sh
           readinessProbe:
             exec:
               command:
               - "/usr/bin/bash"
               - "-c"
               - "/usr/sbin/ipactl status"
-            initialDelaySeconds: 10
+            initialDelaySeconds: 30
             timeoutSeconds: 10
             periodSeconds: 10
             successThreshold: 1
@@ -106,7 +112,7 @@ spec:
               - "/usr/bin/bash"
               - "-c"
               - "/usr/sbin/ipactl status"
-            initialDelaySeconds: 10
+            initialDelaySeconds: 30
             timeoutSeconds: 10
             periodSeconds: 10
             successThreshold: 1
