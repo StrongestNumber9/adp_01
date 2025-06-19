@@ -6,10 +6,6 @@ if [ -f /data/data.tar ]; then
     systemctl exit 0;
 fi;
 
-# Stores the ccache in predictable place so the it will survive a container restart
-sed -i 's,PrivateTmp=on,PrivateTmp=off,g' /usr/lib/systemd/system/ipa-dnskeysyncd.service;
-sed -i 's,PrivateTmp=on,PrivateTmp=off,g' /usr/lib/systemd/system/dirsrv@.service;
-
 echo "Bootstrapping server";
 ipa-server-install --unattended --domain "{{.Values.ipa.domain | lower}}" --realm "{{.Values.ipa.domain | upper}}" --ds-password "{{.Values.ipa.password}}" --admin-password "{{.Values.ipa.password}}" --setup-dns --forwarder "{{.Values.ipa.forwarder}}" --forward-policy only --no-ntp --auto-reverse;
 
