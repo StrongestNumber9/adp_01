@@ -23,35 +23,16 @@ spec:
         - name: hdfs-entrypoint
           configMap:
             name: hdfs-entrypoint
-        - name: hdfs-data-{{.}}
+        - name: hdfs-dfs-{{.}}
           emptyDir:
       hostname: hdfs-{{.}}
       subdomain: tg
-      initContainers:
-        - name: hdfs-{{.}}-init
-          image: {{$.Values.image.path}}:{{$.Values.image.version}}
-          volumeMounts:
-            - mountPath: /data
-              name: hdfs-data-{{.}}
-            - mountPath: /config/hdp-03
-              name: shareable-hdp-03-configmap
-            - mountPath: /entrypoint.sh
-              name: hdfs-entrypoint
-              subPath: entrypoint-init.sh
-          tty: true
-          env:
-          - name: IPA_DOMAIN
-            value: {{$.Values.ipa.domain}}
-          - name: IPA_PASSWORD
-            value: {{$.Values.ipa.password}}
-          securityContext:
-            privileged: {{$.Values.security.privileged}}
       containers:
         - name: hdfs-{{.}}
           image: {{$.Values.image.path}}:{{$.Values.image.version}}
           volumeMounts:
-            - mountPath: /data
-              name: hdfs-data-{{.}}
+            - mountPath: /opt/teragrep/dfs/
+              name: hdfs-dfs-{{.}}
             - mountPath: /config/hdp-03
               name: shareable-hdp-03-configmap
             - mountPath: /entrypoint.sh
@@ -77,22 +58,22 @@ spec:
               - "/usr/bin/bash"
               - "-c"
               - "systemctl status datanode"
-            initialDelaySeconds: 10
+            initialDelaySeconds: 30
             timeoutSeconds: 10
             periodSeconds: 10
             successThreshold: 1
-            failureThreshold: 60
+            failureThreshold: 1
           livenessProbe:
             exec:
               command:
               - "/usr/bin/bash"
               - "-c"
               - "systemctl status datanode"
-            initialDelaySeconds: 10
+            initialDelaySeconds: 30
             timeoutSeconds: 10
             periodSeconds: 10
             successThreshold: 1
-            failureThreshold: 60
+            failureThreshold: 1
           securityContext:
             privileged: {{$.Values.security.privileged}}
 {{- end}}
@@ -117,6 +98,8 @@ spec:
       volumes:
         - name: hdfs-data-namenode01
           emptyDir:
+        - name: hdfs-dfs-namenode01
+          emptyDir:
         - name: shareable-hdp-03-configmap
           configMap:
             name: shareable-hdp-03-configmap
@@ -128,36 +111,14 @@ spec:
             name: hdfs-entrypoint
       hostname: hdfs-namenode01
       subdomain: tg
-      initContainers:
-        - name: hdfs-namenode01-init
-          image: {{.Values.image.path}}:{{.Values.image.version}}
-          volumeMounts:
-            - mountPath: /data
-              name: hdfs-data-namenode01
-            - mountPath: /config/hdp-04
-              name: hdfs-hdp-04-configmap
-            - mountPath: /config/hdp-03
-              name: shareable-hdp-03-configmap
-            - mountPath: /entrypoint.sh
-              name: hdfs-entrypoint
-              subPath: entrypoint-init.sh
-            - mountPath: /entrypoint-common.sh
-              name: hdfs-entrypoint
-              subPath: entrypoint-common.sh
-          tty: true
-          env:
-          - name: IPA_DOMAIN
-            value: {{.Values.ipa.domain}}
-          - name: IPA_PASSWORD
-            value: {{.Values.ipa.password}}
-          securityContext:
-            privileged: {{.Values.security.privileged}}
       containers:
         - name: hdfs-namenode01
           image: {{.Values.image.path}}:{{.Values.image.version}}
           volumeMounts:
             - mountPath: /data
               name: hdfs-data-namenode01
+            - mountPath: /opt/teragrep/dfs/
+              name: hdfs-dfs-namenode01
             - mountPath: /config/hdp-04
               name: hdfs-hdp-04-configmap
             - mountPath: /config/hdp-03
@@ -184,22 +145,22 @@ spec:
               command:
               - "/usr/bin/bash"
               - "-c"
-              - "[ -f /namenode.ready ] && systemctl status namenode"
-            initialDelaySeconds: 10
+              - "systemctl status namenode"
+            initialDelaySeconds: 30
             timeoutSeconds: 10
             periodSeconds: 10
             successThreshold: 1
-            failureThreshold: 60
+            failureThreshold: 1
           livenessProbe:
             exec:
               command:
               - "/usr/bin/bash"
               - "-c"
-              - "[ -f /namenode.ready ] && systemctl status namenode"
-            initialDelaySeconds: 10
+              - "systemctl status namenode"
+            initialDelaySeconds: 30
             timeoutSeconds: 10
             periodSeconds: 10
             successThreshold: 1
-            failureThreshold: 60
+            failureThreshold: 1
           securityContext:
             privileged: {{.Values.security.privileged}}

@@ -1,8 +1,7 @@
 #!/bin/bash
-# Common scripts
 bash /scripts/patch_resolv.sh;
 bash /scripts/patch_hosts.sh;
-bash /scripts/restore_ipa.sh || exit 1;
+bash /scripts/join_ipa.sh;
 
 bash /scripts/copy_config.sh /config/hdp-03/ /opt/teragrep/hdp_03/etc/hadoop/ root:hadoop;
 
@@ -29,13 +28,10 @@ get_keytab() {
     ipa-getkeytab -s "ipa.${IPA_DOMAIN}" -p "${1}/$(hostname).${IPA_DOMAIN,,}@${IPA_DOMAIN^^}" -k "/opt/teragrep/hdp_03/keytabs/${1}.service.keytab";
 }
 
-fix_keytab_perms() {
-    chown -R root:hadoop /opt/teragrep/hdp_03/keytabs/;
-    chmod 755 /opt/teragrep/hdp_03/keytabs;
-    chmod 644 /opt/teragrep/hdp_03/keytabs/*.keytab;
-}
-
 for keytab in "${@}"; do
     get_keytab "${keytab}";
 done;
-fix_keytab_perms;
+
+chown -R root:hadoop /opt/teragrep/hdp_03/keytabs/;
+chmod 755 /opt/teragrep/hdp_03/keytabs;
+chmod 644 /opt/teragrep/hdp_03/keytabs/*.keytab;
