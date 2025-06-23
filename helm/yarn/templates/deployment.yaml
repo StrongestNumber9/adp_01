@@ -28,25 +28,6 @@ spec:
             name: yarn-entrypoint
       hostname: yarn-{{.}}
       subdomain: tg
-      initContainers:
-        - name: yarn-{{.}}-init
-          image: {{$.Values.image.path}}:{{$.Values.image.version}}
-          volumeMounts:
-            - mountPath: /config/hdp-03
-              name: shareable-hdp-03-configmap
-            - mountPath: /config/spk-02
-              name: shareable-spk-02-configmap
-            - mountPath: /entrypoint.sh
-              name: yarn-entrypoint
-              subPath: entrypoint-init.sh
-          tty: true
-          env:
-          - name: IPA_DOMAIN
-            value: {{$.Values.ipa.domain}}
-          - name: IPA_PASSWORD
-            value: {{$.Values.ipa.password}}
-          securityContext:
-            privileged: {{$.Values.security.privileged}}
       containers:
         - name: yarn-{{.}}
           image: {{$.Values.image.path}}:{{$.Values.image.version}}
@@ -57,7 +38,7 @@ spec:
               name: shareable-spk-02-configmap
             - mountPath: /entrypoint.sh
               name: yarn-entrypoint
-              subPath: entrypoint.sh
+              subPath: entrypoint-workernode.sh
             - mountPath: /entrypoint-common.sh
               name: yarn-entrypoint
               subPath: entrypoint-common.sh
@@ -127,25 +108,6 @@ spec:
             name: yarn-entrypoint
       hostname: yarn-controlnode01
       subdomain: tg
-      initContainers:
-        - name: yarn-controlnode01-init
-          image: {{.Values.image.path}}:{{.Values.image.version}}
-          volumeMounts:
-            - mountPath: /config/hdp-03
-              name: shareable-hdp-03-configmap
-            - mountPath: /config/spk-02
-              name: shareable-spk-02-configmap
-            - mountPath: /entrypoint.sh
-              name: yarn-entrypoint
-              subPath: entrypoint-init.sh
-          tty: true
-          env:
-          - name: IPA_DOMAIN
-            value: {{.Values.ipa.domain}}
-          - name: IPA_PASSWORD
-            value: {{.Values.ipa.password}}
-          securityContext:
-            privileged: {{.Values.security.privileged}}
       containers:
         - name: yarn-controlnode01
           image: {{.Values.image.path}}:{{.Values.image.version}}
@@ -156,7 +118,7 @@ spec:
               name: shareable-spk-02-configmap
             - mountPath: /entrypoint.sh
               name: yarn-entrypoint
-              subPath: entrypoint.sh
+              subPath: entrypoint-controlnode.sh
             - mountPath: /entrypoint-common.sh
               name: yarn-entrypoint
               subPath: entrypoint-common.sh
