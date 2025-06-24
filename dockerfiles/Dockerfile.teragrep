@@ -11,6 +11,6 @@ COPY entrypoint.service /etc/systemd/system/entrypoint.service
 RUN systemctl enable entrypoint.service
 EXPOSE 8080
 RUN echo "srv-zpln ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
-COPY scripts/patch_resolv.sh scripts/patch_hosts.sh scripts/join_ipa.sh scripts/shutdown.sh scripts/copy_config.sh /scripts/
+COPY scripts/patch_resolv.sh scripts/patch_hosts.sh scripts/join_ipa.sh scripts/copy_config.sh /scripts/
 ENTRYPOINT ["/usr/sbin/init"]
 CMD ["--show-status=false"]

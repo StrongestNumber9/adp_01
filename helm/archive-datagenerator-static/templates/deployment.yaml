@@ -69,7 +69,3 @@ spec:
             failureThreshold: 60
           securityContext:
             privileged: {{.Values.security.privileged}}
-          lifecycle:
-            preStop:
-              exec:
-                command: [ "/usr/bin/bash", "/scripts/shutdown.sh" ]
