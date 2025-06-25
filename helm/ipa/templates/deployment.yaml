@@ -100,8 +100,8 @@ spec:
               command:
               - "/usr/bin/bash"
               - "-c"
-              - "/usr/sbin/ipactl status"
-            initialDelaySeconds: 30
+              - "[ -f /restoring ] || /usr/sbin/ipactl status"
+            initialDelaySeconds: 5
             timeoutSeconds: 10
             periodSeconds: 10
             successThreshold: 1
@@ -111,8 +111,8 @@ spec:
               command:
               - "/usr/bin/bash"
               - "-c"
-              - "/usr/sbin/ipactl status"
-            initialDelaySeconds: 30
+              - "[ -f /restoring ] || /usr/sbin/ipactl status"
+            initialDelaySeconds: 5
             timeoutSeconds: 10
             periodSeconds: 10
             successThreshold: 1

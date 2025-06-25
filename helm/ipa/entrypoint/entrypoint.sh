@@ -1,12 +1,21 @@
 #!/bin/bash
 bash /entrypoint-common.sh;
 
-if [ ! -f /data/data.tar ]; then
-    echo "No /data/data.tar, init was not properly executed?";
+if [ ! -d /data/backup ]; then
+    echo "No /data/backup, init was not properly executed?";
     exit 1;
 fi;
-echo "Init already done, restoring and continuing..";
-tar -xvf /data/data.tar -C /;
-systemctl restart ipa;
+
+
+# Asks for password and confirmation.
+echo "Init already done, restoring from backup..";
+touch /restoring;
+echo -e "{{.Values.ipa.password}}\ny" | ipa-restore /data/backup;
+rm /restoring;
+echo "Backup restored, following the logs.";
+
+# This should never return
 journalctl -fu ipa;
-exit 0;
+
+# Failure state detected
+systemctl exit 1;
