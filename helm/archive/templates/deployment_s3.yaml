@@ -78,7 +78,7 @@ spec:
               command:
               - "/usr/bin/bash"
               - "-c"
-              - "systemctl status bos_01 && systemctl status pth_05"
+              - "ping -c1 -w1 ipa.{{.Values.ipa.domain}} && systemctl status bos_01 && systemctl status pth_05"
             initialDelaySeconds: 30
             timeoutSeconds: 10
             periodSeconds: 10

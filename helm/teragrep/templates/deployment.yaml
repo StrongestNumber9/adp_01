@@ -57,15 +57,22 @@ spec:
           - name: IPA_PASSWORD
             value: {{.Values.ipa.password}}
           readinessProbe:
-            httpGet:
-              path: /health/liveness
-              port: 8080
-            initialDelaySeconds: 3
-            periodSeconds: 3
+            exec:
+              command:
+              - "/usr/bin/bash"
+              - "-c"
+              - "ping -c1 -w1 ipa.{{.Values.ipa.domain}} && curl -s http://127.0.0.1:8080/health/liveness | jq -e 'select(.dummy.healthy==true)'"
+            initialDelaySeconds: 30
+            timeoutSeconds: 10
+            periodSeconds: 10
+            successThreshold: 1
+            failureThreshold: 1
           livenessProbe:
-            httpGet:
-              path: /health/liveness
-              port: 8080
+            exec:
+              command:
+              - "/usr/bin/bash"
+              - "-c"
+              - "ping -c1 -w1 ipa.{{.Values.ipa.domain}} && curl -s http://127.0.0.1:8080/health/liveness | jq -e 'select(.dummy.healthy==true)'"
             initialDelaySeconds: 30
             timeoutSeconds: 10
             periodSeconds: 10

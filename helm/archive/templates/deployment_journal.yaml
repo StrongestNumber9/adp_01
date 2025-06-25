@@ -69,7 +69,7 @@ spec:
               command:
               - "/usr/bin/bash"
               - "-c"
-              - "systemctl status rest-01"
+              - "ping -c1 -w1 ipa.{{.Values.ipa.domain}} && systemctl status rest-01"
             initialDelaySeconds: 30
             timeoutSeconds: 10
             periodSeconds: 10

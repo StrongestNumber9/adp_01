@@ -68,7 +68,7 @@ spec:
               command:
               - "/usr/bin/bash"
               - "-c"
-              - "systemctl status jobhistoryserver && systemctl status resourcemanager"
+              - "ping -c1 -w1 ipa.{{.Values.ipa.domain}} && systemctl status jobhistoryserver && systemctl status resourcemanager"
             initialDelaySeconds: 60
             timeoutSeconds: 10
             periodSeconds: 10

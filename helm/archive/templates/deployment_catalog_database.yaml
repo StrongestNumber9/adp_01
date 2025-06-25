@@ -77,7 +77,7 @@ spec:
               command:
               - "/usr/bin/bash"
               - "-c"
-              - "mariadb <<< 'select 1'"
+              - "ping -c1 -w1 ipa.{{.Values.ipa.domain}} && mariadb <<< 'select 1'"
             initialDelaySeconds: 30
             timeoutSeconds: 10
             periodSeconds: 10

@@ -76,7 +76,7 @@ spec:
               command:
               - "/usr/bin/bash"
               - "-c"
-              - "systemctl status namenode"
+              - "ping -c1 -w1 ipa.{{.Values.ipa.domain}} && systemctl status namenode"
             initialDelaySeconds: 30
             timeoutSeconds: 10
             periodSeconds: 10
