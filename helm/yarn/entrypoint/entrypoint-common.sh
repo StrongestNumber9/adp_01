@@ -2,7 +2,7 @@
 # Common scripts
 bash /scripts/patch_resolv.sh;
 bash /scripts/patch_hosts.sh;
-bash /scripts/join_ipa.sh;
+bash /scripts/join_ipa.sh || systemctl exit 1;
 
 bash /scripts/copy_config.sh /config/hdp-03/ /opt/teragrep/hdp_03/etc/hadoop/ root:hadoop;
 bash /scripts/copy_config.sh /config/spk-02/ /opt/teragrep/spk_02/conf/ root:root;

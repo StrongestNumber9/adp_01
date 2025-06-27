@@ -2,7 +2,7 @@
 # Common scripts
 bash /scripts/patch_resolv.sh;
 bash /scripts/patch_hosts.sh;
-bash /scripts/join_ipa.sh;
+bash /scripts/join_ipa.sh || systemctl exit 1;
 
 # Wait for database to be up if right amount of arguments are passed.
 if [ "$#" -eq 3 ]; then

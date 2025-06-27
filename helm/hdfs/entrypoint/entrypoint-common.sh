@@ -1,7 +1,7 @@
 #!/bin/bash
 bash /scripts/patch_resolv.sh;
 bash /scripts/patch_hosts.sh;
-bash /scripts/join_ipa.sh;
+bash /scripts/join_ipa.sh || systemctl exit 1;
 
 bash /scripts/copy_config.sh /config/hdp-03/ /opt/teragrep/hdp_03/etc/hadoop/ root:hadoop;
 

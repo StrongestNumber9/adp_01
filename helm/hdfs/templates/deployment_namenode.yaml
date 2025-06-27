@@ -16,8 +16,6 @@ spec:
         app: hdfs-namenode01
     spec:
       volumes:
-        - name: hdfs-data-namenode01
-          emptyDir:
         - name: hdfs-dfs-namenode01
           emptyDir:
         - name: shareable-hdp-03-configmap
@@ -31,12 +29,34 @@ spec:
             name: hdfs-entrypoint
       hostname: hdfs-namenode01
       subdomain: tg
+      initContainers:
+        - name: hdfs-namenode01-init
+          image: {{.Values.image.path}}:{{.Values.image.version}}
+          volumeMounts:
+            - mountPath: /opt/teragrep/dfs/
+              name: hdfs-dfs-namenode01
+            - mountPath: /config/hdp-04
+              name: hdfs-hdp-04-configmap
+            - mountPath: /config/hdp-03
+              name: shareable-hdp-03-configmap
+            - mountPath: /entrypoint.sh
+              name: hdfs-entrypoint
+              subPath: entrypoint-init-namenode.sh
+            - mountPath: /entrypoint-common.sh
+              name: hdfs-entrypoint
+              subPath: entrypoint-common.sh
+          tty: true
+          env:
+          - name: IPA_DOMAIN
+            value: {{.Values.ipa.domain}}
+          - name: IPA_PASSWORD
+            value: {{.Values.ipa.password}}
+          securityContext:
+            privileged: {{.Values.security.privileged}}
       containers:
         - name: hdfs-namenode01
           image: {{.Values.image.path}}:{{.Values.image.version}}
           volumeMounts:
-            - mountPath: /data
-              name: hdfs-data-namenode01
             - mountPath: /opt/teragrep/dfs/
               name: hdfs-dfs-namenode01
             - mountPath: /config/hdp-04
@@ -66,7 +86,7 @@ spec:
               - "/usr/bin/bash"
               - "-c"
               - "systemctl status namenode"
-            initialDelaySeconds: 30
+            initialDelaySeconds: 15
             timeoutSeconds: 10
             periodSeconds: 10
             successThreshold: 1
@@ -77,7 +97,7 @@ spec:
               - "/usr/bin/bash"
               - "-c"
               - "ping -c1 -w1 ipa.{{.Values.ipa.domain}} && systemctl status namenode"
-            initialDelaySeconds: 30
+            initialDelaySeconds: 15
             timeoutSeconds: 10
             periodSeconds: 10
             successThreshold: 1

@@ -9,9 +9,7 @@ fi;
 
 # Asks for password and confirmation.
 echo "Init already done, restoring from backup..";
-touch /restoring;
 echo -e "{{.Values.ipa.password}}\ny" | ipa-restore /data/backup;
-rm /restoring;
 echo "Backup restored, following the logs.";
 
 # This should never return
