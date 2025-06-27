@@ -1,4 +1,9 @@
 #!/bin/bash
+echo "Waiting for IPA to be up..";
+while ! ping -c1 -w1 "ipa.${IPA_DOMAIN,,}" > /dev/null 2>&1; do
+    sleep 1;
+done;
+
 echo "Joining to IPA";
 if ! ipa-client-install --force-join --ip-address "$(hostname -i)" --server "ipa.${IPA_DOMAIN,,}" --domain "${IPA_DOMAIN,,}" --realm "${IPA_DOMAIN^^}" --unattended --no-ntp --principal "admin@${IPA_DOMAIN^^}" --password "${IPA_PASSWORD}"; then
     echo "Failed to enroll to IPA, refusing to continue.";

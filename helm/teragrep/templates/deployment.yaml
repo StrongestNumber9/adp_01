@@ -21,6 +21,8 @@ spec:
         - name: shareable-spk-02-configmap
           configMap:
             name: shareable-spk-02-configmap
+        - name: teragrep-notebook-data
+          emptyDir:
         - name: teragrep-zep-01-configmap
           configMap:
             name: teragrep-zep-01-configmap
@@ -47,6 +49,8 @@ spec:
               subPath: entrypoint.sh
             - mountPath: /notebooks
               name: teragrep-notebooks
+            - mountPath: /opt/teragrep/zep_01/notebook
+              name: teragrep-notebook-data
           tty: true
           ports:
           - containerPort: 8080
@@ -61,7 +65,7 @@ spec:
               command:
               - "/usr/bin/bash"
               - "-c"
-              - "ping -c1 -w1 ipa.{{.Values.ipa.domain}} && curl -s http://127.0.0.1:8080/health/liveness | jq -e 'select(.dummy.healthy==true)'"
+              - "ping -c1 -w1 ipa.{{.Values.ipa.domain}} && curl -s http://127.0.0.1:8080/health/liveness | jq -e 'has(\"dummy\") and select(.dummy.healthy==true)'"
             initialDelaySeconds: 30
             timeoutSeconds: 10
             periodSeconds: 10
@@ -72,7 +76,7 @@ spec:
               command:
               - "/usr/bin/bash"
               - "-c"
-              - "ping -c1 -w1 ipa.{{.Values.ipa.domain}} && curl -s http://127.0.0.1:8080/health/liveness | jq -e 'select(.dummy.healthy==true)'"
+              - "ping -c1 -w1 ipa.{{.Values.ipa.domain}} && curl -s http://127.0.0.1:8080/health/liveness | jq -e 'has(\"dummy\") and select(.dummy.healthy==true)'"
             initialDelaySeconds: 30
             timeoutSeconds: 10
             periodSeconds: 10
