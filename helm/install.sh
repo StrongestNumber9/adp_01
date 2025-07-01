@@ -15,4 +15,4 @@ if helm status --namespace teragrep "${1}" > /dev/null 2>&1; then
 fi;
 
 echo "Installing ${1}, it might take a while.";
-helm install --timeout 15m --wait --values config.yaml --values "${1}/values.yaml" --create-namespace --namespace teragrep "${1}" "${1}/";
+helm install --timeout 15m --values values.yaml --wait --create-namespace --namespace teragrep "${1}" "${1}/";

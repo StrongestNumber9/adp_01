@@ -36,7 +36,7 @@ spec:
       subdomain: tg
       containers:
         - name: teragrep
-          image: {{.Values.image.path}}:{{.Values.image.version}}
+          image: {{.Values.containers.teragrep}}
           volumeMounts:
             - mountPath: /config/spk-02
               name: shareable-spk-02-configmap
@@ -66,21 +66,21 @@ spec:
               - "/usr/bin/bash"
               - "-c"
               - "ping -c1 -w1 ipa.{{.Values.ipa.domain}} && curl -s http://127.0.0.1:8080/health/liveness | jq -e 'has(\"dummy\") and select(.dummy.healthy==true)'"
-            initialDelaySeconds: 30
+            initialDelaySeconds: 10
             timeoutSeconds: 10
             periodSeconds: 10
             successThreshold: 1
-            failureThreshold: 1
+            failureThreshold: 6
           livenessProbe:
             exec:
               command:
               - "/usr/bin/bash"
               - "-c"
               - "ping -c1 -w1 ipa.{{.Values.ipa.domain}} && curl -s http://127.0.0.1:8080/health/liveness | jq -e 'has(\"dummy\") and select(.dummy.healthy==true)'"
-            initialDelaySeconds: 30
+            initialDelaySeconds: 10
             timeoutSeconds: 10
             periodSeconds: 10
             successThreshold: 1
-            failureThreshold: 1
+            failureThreshold: 6
           securityContext:
             privileged: {{.Values.security.privileged}}

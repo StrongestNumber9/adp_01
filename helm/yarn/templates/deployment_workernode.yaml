@@ -30,7 +30,7 @@ spec:
       subdomain: tg
       containers:
         - name: yarn-{{.}}
-          image: {{$.Values.image.path}}:{{$.Values.image.version}}
+          image: {{$.Values.containers.yarn.workernode}}
           volumeMounts:
             - mountPath: /config/hdp-03
               name: shareable-hdp-03-configmap
@@ -59,22 +59,22 @@ spec:
               - "/usr/bin/bash"
               - "-c"
               - "systemctl status nodemanager"
-            initialDelaySeconds: 60
+            initialDelaySeconds: 10
             timeoutSeconds: 10
             periodSeconds: 10
             successThreshold: 1
-            failureThreshold: 1
+            failureThreshold: 12
           livenessProbe:
             exec:
               command:
               - "/usr/bin/bash"
               - "-c"
               - "ping -c1 -w1 ipa.{{$.Values.ipa.domain}} && systemctl status nodemanager"
-            initialDelaySeconds: 60
+            initialDelaySeconds: 10
             timeoutSeconds: 10
             periodSeconds: 10
             successThreshold: 1
-            failureThreshold: 1
+            failureThreshold: 12
           securityContext:
             privileged: {{$.Values.security.privileged}}
 {{- end}}

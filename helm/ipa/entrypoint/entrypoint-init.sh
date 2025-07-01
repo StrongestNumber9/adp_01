@@ -19,7 +19,7 @@ echo "Creating data dump";
 ipa-backup;
 
 echo "Moving the backup to well known location";
-find /var/lib/ipa/backup/ -type d -name "ipa-full*" -exec mv {} /data/backup \;;
+mv -v "$(find /var/lib/ipa/backup/ -type d -name "ipa-full*" | head -1)" /data/backup;
 
 echo "Exiting";
 systemctl exit 0;

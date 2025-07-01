@@ -33,7 +33,7 @@ spec:
       subdomain: tg
       containers:
         - name: archive-catalog-database
-          image: {{.Values.image.database.path}}:{{.Values.image.database.version}}
+          image: {{.Values.containers.mariadb}}
           volumeMounts:
             - mountPath: /data
               name: archive-rest-02-backend-database-data
@@ -67,21 +67,21 @@ spec:
               - "/usr/bin/bash"
               - "-c"
               - "mariadb <<< 'select 1'"
-            initialDelaySeconds: 30
+            initialDelaySeconds: 10
             timeoutSeconds: 10
             periodSeconds: 10
             successThreshold: 1
-            failureThreshold: 1
+            failureThreshold: 6
           livenessProbe:
             exec:
               command:
               - "/usr/bin/bash"
               - "-c"
               - "ping -c1 -w1 ipa.{{.Values.ipa.domain}} && mariadb <<< 'select 1'"
-            initialDelaySeconds: 30
+            initialDelaySeconds: 10
             timeoutSeconds: 10
             periodSeconds: 10
             successThreshold: 1
-            failureThreshold: 1
+            failureThreshold: 6
           securityContext:
             privileged: {{.Values.security.privileged}}

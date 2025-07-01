@@ -29,7 +29,7 @@ spec:
       subdomain: tg
       containers:
         - name: archive-journal
-          image: {{.Values.image.path}}:{{.Values.image.version}}
+          image: {{.Values.containers.archive.journal}}
           volumeMounts:
             - mountPath: /config/
               name: archive-rest-01-configmap
@@ -59,21 +59,21 @@ spec:
               - "/usr/bin/bash"
               - "-c"
               - "systemctl status rest-01 && journalctl -u rest-01 | grep \"Started Main\""
-            initialDelaySeconds: 30
+            initialDelaySeconds: 10
             timeoutSeconds: 10
             periodSeconds: 10
             successThreshold: 1
-            failureThreshold: 1
+            failureThreshold: 6
           livenessProbe:
             exec:
               command:
               - "/usr/bin/bash"
               - "-c"
               - "ping -c1 -w1 ipa.{{.Values.ipa.domain}} && systemctl status rest-01"
-            initialDelaySeconds: 30
+            initialDelaySeconds: 10
             timeoutSeconds: 10
             periodSeconds: 10
             successThreshold: 1
-            failureThreshold: 1
+            failureThreshold: 6
           securityContext:
             privileged: {{.Values.security.privileged}}

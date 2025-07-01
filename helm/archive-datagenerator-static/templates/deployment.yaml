@@ -37,7 +37,7 @@ spec:
       subdomain: tg
       containers:
         - name: archive-datagenerator-static
-          image: {{.Values.image.path}}:{{.Values.image.version}}
+          image: {{index .Values.containers "archive-datagenerator-static"}}
           volumeMounts:
             - mountPath: /data
               name: archive-datagenerator-static-data

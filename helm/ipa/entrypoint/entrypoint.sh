@@ -12,6 +12,9 @@ echo "Init already done, restoring from backup..";
 echo -e "{{.Values.ipa.password}}\ny" | ipa-restore /data/backup;
 echo "Backup restored, following the logs.";
 
+# Additional check for liveness
+touch /ipa.ready;
+
 # This should never return
 journalctl -fu ipa;
 

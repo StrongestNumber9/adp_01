@@ -29,7 +29,7 @@ spec:
       subdomain: tg
       containers:
         - name: yarn-controlnode01
-          image: {{.Values.image.path}}:{{.Values.image.version}}
+          image: {{.Values.containers.yarn.controlnode}}
           volumeMounts:
             - mountPath: /config/hdp-03
               name: shareable-hdp-03-configmap
@@ -46,7 +46,7 @@ spec:
             requests:
               cpu: "0.001m"
             limits:
-              cpu: "{{$.Values.resources.yarn.controlnode.cpu}}"
+              cpu: "{{.Values.resources.yarn.controlnode.cpu}}"
           env:
           - name: IPA_DOMAIN
             value: {{.Values.ipa.domain}}
@@ -58,21 +58,21 @@ spec:
               - "/usr/bin/bash"
               - "-c"
               - "systemctl status jobhistoryserver && systemctl status resourcemanager"
-            initialDelaySeconds: 60
+            initialDelaySeconds: 10
             timeoutSeconds: 10
             periodSeconds: 10
             successThreshold: 1
-            failureThreshold: 1
+            failureThreshold: 12
           livenessProbe:
             exec:
               command:
               - "/usr/bin/bash"
               - "-c"
               - "ping -c1 -w1 ipa.{{.Values.ipa.domain}} && systemctl status jobhistoryserver && systemctl status resourcemanager"
-            initialDelaySeconds: 60
+            initialDelaySeconds: 10
             timeoutSeconds: 10
             periodSeconds: 10
             successThreshold: 1
-            failureThreshold: 1
+            failureThreshold: 12
           securityContext:
             privileged: {{.Values.security.privileged}}
