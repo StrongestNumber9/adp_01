@@ -52,11 +52,6 @@ spec:
               name: archive-database-shared
               subPath: enforce_tls.cnf
           tty: true
-          resources:
-            requests:
-              cpu: "0.001m"
-            limits:
-              cpu: "{{.Values.resources.archive.s3.cpu}}"
           env:
           - name: IPA_DOMAIN
             value: {{.Values.ipa.domain}}

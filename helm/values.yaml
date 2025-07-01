@@ -67,32 +67,6 @@ security:
   # Whether privileged mode should be used for containers. This can be potentially huge vulnerability but systemd based containers might not run without it.
   privileged: "true"
 
-# Global resource limits
-resources:
-  # https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/#resource-units-in-kubernetes
-  # 1000m = 1 CPU
-  yarn:
-    controlnode:
-      cpu: 250m
-    workernode:
-      cpu: 1000m
-  hdfs:
-    namenode:
-      cpu: 1000m
-    datanode:
-      cpu: 1000m
-  archive:
-    journal:
-      cpu: 1000m
-    journaldatabase:
-      cpu: 1000m
-    catalog:
-      cpu: 1000m
-    catalogdatabase:
-      cpu: 1000m
-    s3:
-      cpu: 1000m
-
 # Global yarn related configurations
 yarn:
   # These resources are *per node*

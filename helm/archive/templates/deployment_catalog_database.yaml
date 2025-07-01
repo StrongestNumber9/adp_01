@@ -51,11 +51,6 @@ spec:
             - mountPath: /var/lib/mysql
               name: archive-rest-02-backend-database-var-lib-mysql
           tty: true
-          resources:
-            requests:
-              cpu: "0.001m"
-            limits:
-              cpu: "{{.Values.resources.archive.catalogdatabase.cpu}}"
           env:
           - name: IPA_DOMAIN
             value: {{.Values.ipa.domain}}

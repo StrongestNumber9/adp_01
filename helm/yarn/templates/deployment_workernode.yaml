@@ -43,11 +43,6 @@ spec:
               name: yarn-entrypoint
               subPath: entrypoint-common.sh
           tty: true
-          resources:
-            requests:
-              cpu: "0.001m"
-            limits:
-              cpu: "{{$.Values.resources.yarn.workernode.cpu}}"
           env:
           - name: IPA_DOMAIN
             value: {{$.Values.ipa.domain}}

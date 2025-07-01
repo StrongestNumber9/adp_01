@@ -37,7 +37,6 @@ spec:
             value: {{.Values.ipa.domain}}
           - name: IPA_PASSWORD
             value: {{.Values.ipa.password}}
-          resources: {}
           volumeMounts:
           - mountPath: /data
             name: ipa-data
@@ -83,7 +82,6 @@ spec:
             value: {{.Values.ipa.domain}}
           - name: IPA_PASSWORD
             value: {{.Values.ipa.password}}
-          resources: {}
           volumeMounts:
           - mountPath: /data
             name: ipa-data

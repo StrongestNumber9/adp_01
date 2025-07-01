@@ -53,9 +53,6 @@ spec:
               name: archive-datagenerator-static-entrypoint
               subPath: entrypoint.sh
           tty: true
-          resources:
-            requests:
-              cpu: "0.001m"
           env:
           - name: IPA_DOMAIN
             value: {{.Values.ipa.domain}}

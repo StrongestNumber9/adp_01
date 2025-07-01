@@ -42,11 +42,6 @@ spec:
               name: hdfs-entrypoint
               subPath: entrypoint-common.sh
           tty: true
-          resources:
-            requests:
-              cpu: "0.001m"
-            limits:
-              cpu: "{{$.Values.resources.hdfs.datanode.cpu}}"
           env:
           - name: IPA_DOMAIN
             value: {{$.Values.ipa.domain}}

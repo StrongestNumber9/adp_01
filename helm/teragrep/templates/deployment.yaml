@@ -54,7 +54,6 @@ spec:
           tty: true
           ports:
           - containerPort: 8080
-          resources: {}
           env:
           - name: IPA_DOMAIN
             value: {{.Values.ipa.domain}}
