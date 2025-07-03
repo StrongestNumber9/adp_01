@@ -9,10 +9,8 @@ fi;
 echo "Bootstrapping server";
 ipa-server-install --unattended --domain "{{.Values.ipa.domain | lower}}" --realm "{{.Values.ipa.domain | upper}}" --ds-password "{{.Values.ipa.password}}" --admin-password "{{.Values.ipa.password}}" --setup-dns --forwarder "{{.Values.ipa.forwarder}}" --forward-policy only --no-ntp --auto-reverse;
 
-echo "Creating a reverse dnszone";
-echo "{{.Values.ipa.password}}" | kinit admin;
-ipa dnszone-add 244.10.in-addr.arpa.;
 echo "Running start-up scripts inside /config";
+echo "{{.Values.ipa.password}}" | kinit admin;
 for file in /config/*.sh; do
     echo "Executing init script ${file}";
     bash "${file}";

@@ -16,5 +16,9 @@ IP_REV="$(sed "s,^\([0-9]\+\)\.\([0-9]\+\)\.\([0-9]\+\)\.[0-9]\+,\3\.\2\.\1,g" <
 IP_LAST="$(sed "s,.*\.\([0-9]\+\)$,\1,g" <<< $IP)";
 
 kinit admin <<< "${IPA_PASSWORD}";
-ipa dnsrecord-add "${IP_REV}.in-addr.arpa." "${IP_LAST}" --ptr-rec "$(hostname -f).";
+DNS_REPLY="$(ipa dnsrecord-add "${IP_REV}.in-addr.arpa." "${IP_LAST}" --ptr-rec "$(hostname -f).")";
+if grep "DNS zone not found" <<< "${DNS_REPLY}"; then
+    echo "Failed to join to IPA: ${DNS_REPLY}";
+    exit 1;
+fi;
 kdestroy -A;
