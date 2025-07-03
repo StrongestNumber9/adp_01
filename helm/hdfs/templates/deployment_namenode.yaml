@@ -85,7 +85,7 @@ spec:
             timeoutSeconds: 10
             periodSeconds: 10
             successThreshold: 1
-            failureThreshold: 6
+            failureThreshold: 12
           livenessProbe:
             exec:
               command:
@@ -96,6 +96,6 @@ spec:
             timeoutSeconds: 10
             periodSeconds: 10
             successThreshold: 1
-            failureThreshold: 6
+            failureThreshold: 12
           securityContext:
             privileged: {{.Values.security.privileged}}
