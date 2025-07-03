@@ -19,8 +19,6 @@ The `config.yaml` values file contains all "meta" and shareable configuration li
 
 The `shareable` module contains all shareable configuration files.
 
-The `${MODULE}/values.yaml` inside each module will contain module-specific values.
-
 The application-specific configurations for all modules can be found inside `${MODULE}/config` directories.
 
 == Usage
@@ -63,6 +61,6 @@ Expected files to be inside `dockerfiles/rpms/` directory:
   - `spk_03.rpm`
   - `zep_01.rpm`
 
-The scripts `build-dev.sh` and `minikube-load.sh` under `dockerfiles/` directory will build and load the wanted images using podman to your local `Minikube` cluster.
+Read `dockerfiles/README.adoc` for information.
 
 Be sure to uninstall any running modules to make sure the container images are properly updated.
